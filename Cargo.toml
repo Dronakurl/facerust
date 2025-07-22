@@ -1,0 +1,25 @@
+[package]
+name = "facerust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+opencv = { version = "0.92", default-features = false, features = ["dnn", "imgproc", "imgcodecs", "objdetect"] }
+anyhow = "1.0"
+thiserror = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+notify = "6.0"  # For file system watching
+clap = { version = "4.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.0", features = ["v4"] }
+
+[lib]
+name = "facerust"
+path = "src/lib.rs"
+
+[[bin]]
+name = "facerust-cli"
+path = "src/bin/cli.rs"
