@@ -10,7 +10,7 @@ use tracing_subscriber;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize tracing
     tracing_subscriber::fmt()
-        .with_max_level(Level::INFO)
+        .with_max_level(Level::DEBUG)
         .init();
 
     let matches = Command::new("Face Recognition CLI Tool")
