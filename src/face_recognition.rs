@@ -27,7 +27,7 @@ pub struct FaceRecognition {
     watcher_running: Arc<AtomicBool>,
 }
 
-const SCORE_THRESHOLD: f32 = 0.7;
+const SCORE_THRESHOLD: f32 = 0.5;  // Lowered from 0.7 for better face detection
 const NMS_THRESHOLD: f32 = 0.3;
 const TOP_K: i32 = 5000;
 
@@ -590,5 +590,16 @@ impl FaceRecognition {
         )?;
 
         Ok(())
+    }
+
+    /// Simple face detection only (no recognition) - returns count of detected faces
+    pub async fn detect_faces_count<P: AsRef<Path>>(&mut self, image_path: P) -> Result<usize> {
+        let frame = imread(image_path.as_ref().to_str().unwrap(), IMREAD_COLOR)?;
+        if frame.empty() {
+            return Err(FaceRecognitionError::InvalidImage);
+        }
+
+        let detected_faces = self.extract_features(frame).await?;
+        Ok(detected_faces.len())
     }
 }
