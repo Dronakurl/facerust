@@ -1,5 +1,5 @@
 use crate::{FaceRecognition, MatchResult};
-use opencv::{core::Mat, prelude::*};
+use opencv::core::Mat;
 use std::ffi::{CStr, CString};
 use std::os::raw::{c_char, c_float, c_int};
 use std::ptr;
@@ -20,7 +20,8 @@ pub struct CMatchResult {
 
 impl From<MatchResult> for CMatchResult {
     fn from(result: MatchResult) -> Self {
-        let name_cstring = CString::new(result.name).unwrap_or_else(|_| CString::new("error").unwrap());
+        let name_cstring =
+            CString::new(result.name).unwrap_or_else(|_| CString::new("error").unwrap());
         Self {
             name: name_cstring.into_raw(),
             score: result.score,
@@ -34,7 +35,7 @@ pub extern "C" fn facerecognition_create() -> *mut CFaceRecognition {
         Ok(rt) => rt,
         Err(_) => return ptr::null_mut(),
     };
-    
+
     let face_rec = match FaceRecognition::new(
         Some("models/face_detection_yunet_2023mar.onnx"),
         Some("models/face_recognition_sface_2021dec.onnx"),
@@ -66,7 +67,10 @@ pub extern "C" fn facerecognition_load_persons_db(
     };
 
     match face_rec.runtime.block_on(async {
-        face_rec.inner.load_persons_db(db_path_str, false, false).await
+        face_rec
+            .inner
+            .load_persons_db(db_path_str, false, false)
+            .await
     }) {
         Ok(_) => 0,
         Err(_) => -1,
@@ -90,36 +94,40 @@ pub extern "C" fn facerecognition_run_one_face_opencv_mat(
     }
 
     let face_rec = unsafe { &mut *face_rec };
-    
+
     // Create OpenCV Mat from raw data
     let mat_type = match channels {
         1 => opencv::core::CV_8UC1,
         3 => opencv::core::CV_8UC3,
-        _ => return CMatchResult {
-            name: CString::new("error").unwrap().into_raw(),
-            score: 0.0,
-        },
+        _ => {
+            return CMatchResult {
+                name: CString::new("error").unwrap().into_raw(),
+                score: 0.0,
+            }
+        }
     };
 
     let mat = unsafe {
         match Mat::new_rows_cols_with_data_unsafe(
-            rows, 
-            cols, 
+            rows,
+            cols,
             mat_type,
             mat_data as *mut _,
-            opencv::core::Mat_AUTO_STEP
+            opencv::core::Mat_AUTO_STEP,
         ) {
             Ok(m) => m,
-            Err(_) => return CMatchResult {
-                name: CString::new("error").unwrap().into_raw(),
-                score: 0.0,
-            },
+            Err(_) => {
+                return CMatchResult {
+                    name: CString::new("error").unwrap().into_raw(),
+                    score: 0.0,
+                }
+            }
         }
     };
 
-    let result = face_rec.runtime.block_on(async {
-        face_rec.inner.run_one_face(mat, threshold, false).await
-    });
+    let result = face_rec
+        .runtime
+        .block_on(async { face_rec.inner.run_one_face(mat, threshold, false).await });
 
     match result {
         Ok(match_result) => match_result.into(),
