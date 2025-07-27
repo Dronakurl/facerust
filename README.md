@@ -1,115 +1,59 @@
 # 🦀 FaceRust - Face Recognition in Rust
 
-> A blazingly fast face recognition library written in Rust 🚀
-
-## ✨ Features
-
-- 🎯 **Real-time face detection** using OpenCV's YuNet model
-- 🧠 **Face recognition** with SFace deep learning model  
-- 📁 **Smart database management** with automatic file watching
-- ⚡ **Async-first design** for maximum performance
-- 🔄 **Hot reloading** - database changes detected automatically
-- 🖼️ **Image visualization** with bounding boxes and labels
-- 🛠️ **CLI tool** ready to use out of the box
+Fast face recognition library with CLI tool and C/C++ integration.
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone and build
-git clone <repo>
-cd facerust
+# Build (automatically downloads ONNX models)
 cargo build --release
 
-# Run face recognition on an image
-cargo run --bin facerust-cli -- -i /path/to/image.jpg -d /path/to/faces_db
-
-# Test database hot-reloading
-cargo run --bin facerust-cli -- -i image.jpg -d faces_db --test-mode
+# Run face recognition
+cargo run --bin facerust-cli -- -i image.jpg -d ./media/db
 ```
 
-## 📁 Database Structure
+**Models:** ONNX files are downloaded automatically during build. Manual download: `./download_models.sh`
 
+**Database structure:** Put person photos in folders named after them:
 ```
-faces_db/
-├── person1/
-│   ├── photo1.jpg
-│   ├── photo2.jpg
-│   └── photo3.jpg
-└── person2/
-    ├── image1.jpg
-    └── image2.jpg
+media/db/
+├── john/
+│   └── photo.jpg
+└── jane/
+    └── image.jpg
 ```
 
-## 🎛️ CLI Options
-
-```bash
-Face Recognition CLI Tool
-
-Options:
-  -i, --image <FILE>  Path to the input image
-  -d, --db <DIR>      Path to the faces database  
-  -t, --test-mode     Test database update mechanism
-  -h, --help          Show help
-```
-
-## 🔧 Library Usage
+## 🔧 Rust Library
 
 ```rust
 use facerust::FaceRecognition;
 
-// Initialize with ONNX models
-let mut face_rec = FaceRecognition::new(
-    Some("models/face_detection_yunet_2023mar.onnx"),
-    Some("models/face_recognition_sface_2021dec.onnx"),
-    Some(1000)
-)?;
-
-// Load person database
-face_rec.load_persons_db("./faces_db", false, false).await?;
-
-// Start watching for database changes
-face_rec.start_watching(5).await?;
-
-// Run face recognition
+let mut face_rec = FaceRecognition::new(None, None, None)?;
+face_rec.load_persons_db("./media/db", false, false).await?;
 let results = face_rec.run(&mut image, 0.4, true).await?;
 ```
 
-## 🎯 What's Inside
+## 🔗 C/C++ Integration
 
-- 📦 **Core Library** - Face recognition engine
-- 🖥️ **CLI Tool** - Ready-to-use command line interface  
-- 🔍 **File Watcher** - Automatic database reload on changes
-- 📊 **Rich Types** - Structured data for matches and results
-- ⚡ **Async Runtime** - Built on Tokio for performance
+```c
+#include "facerust.h"
+
+CFaceRecognition* face_rec = facerecognition_create();
+facerecognition_load_persons_db(face_rec, "./media/db");
+CMatchResult result = facerecognition_run_one_face_opencv_mat(
+    face_rec, image_data, height, width, channels, 0.3f);
+printf("Recognized: %s\n", result.name);
+```
+
+**Try it:** `make && make test`
+
+**Files:** [`example_c_integration.c`](./example_c_integration.c) • [`C_INTEGRATION_EXAMPLE.md`](./C_INTEGRATION_EXAMPLE.md) • [`INTEGRATION_GUIDE.md`](./INTEGRATION_GUIDE.md)
 
 ## 🛠️ Requirements
 
 - Rust 1.70+
-- OpenCV 4.11.0+ (required for YuNet ONNX model compatibility)
-- pkg-config
-
-### 📦 OpenCV Installation
-
-The face recognition functionality requires **OpenCV 4.11.0 or newer** for proper ONNX model support. Most system packages provide older versions that won't work with the YuNet model.
-
-**Quick Installation:**
-```bash
-# Run the provided installation script
-./install_opencv.sh
-```
-
-**Manual Installation:**
-If you prefer to install manually, the script builds OpenCV 4.11.0 from source with the required modules. This takes 15-30 minutes but ensures compatibility.
-
-**Troubleshooting:**
-- If you get "Layer with requested id=-1 not found" errors, you need to upgrade OpenCV
-- Ubuntu/Debian system packages (libopencv-dev) are typically too old (4.6.0)
-- The installation script handles all dependencies automatically
-
-## 📈 Performance
-
-Built with Rust's zero-cost abstractions and OpenCV's optimized computer vision algorithms for maximum speed and efficiency.
+- OpenCV 4.11.0+ (run `./install_opencv.sh` if needed)
 
 ---
 
-*Made with ❤️ and lots of ☕*
+Features: YuNet face detection • SFace recognition • File watching • CLI tool • C/C++ interface

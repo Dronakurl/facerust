@@ -127,12 +127,13 @@ try {
 ## 🛠️ **Build and Test**
 
 1. **Build your project as usual**
-2. **Make sure the models are accessible:**
+2. **Models are automatically downloaded during build:**
    ```bash
-   # Ensure these exist in your container/system:
-   /app/models/face_detection_yunet_2023mar.onnx
-   /app/models/face_recognition_sface_2021dec.onnx
+   cd facerust
+   cargo build --release  # Downloads ONNX models automatically
    ```
+   
+   Models will be in `facerust/models/` and copied to your project during integration.
 
 3. **Test with your existing pipeline**
 
