@@ -12,7 +12,7 @@ cargo build --release
 cargo run --bin facerust-cli -- -i image.jpg -d ./media/db
 ```
 
-**Models:** ONNX files are downloaded automatically during build. Manual download: `./download_models.sh`
+**Models:** ONNX files are downloaded automatically during build via `build.rs`
 
 **Database structure:** Put person photos in folders named after them:
 ```
@@ -45,14 +45,22 @@ CMatchResult result = facerecognition_run_one_face_opencv_mat(
 printf("Recognized: %s\n", result.name);
 ```
 
-**Try it:** `make && make test`
+**Quick start:**
+```bash
+cd c_integration
+./build.sh --clean --test
+```
 
-**Files:** [`example_c_integration.c`](./example_c_integration.c) • [`C_INTEGRATION_EXAMPLE.md`](./C_INTEGRATION_EXAMPLE.md) • [`INTEGRATION_GUIDE.md`](./INTEGRATION_GUIDE.md)
+**Features:** CMake build system • Static/dynamic linking • Language server support (`--bear`)
+
+**Documentation:** [`c_integration/README.md`](./c_integration/README.md)
 
 ## 🛠️ Requirements
 
 - Rust 1.70+
-- OpenCV 4.11.0+ (run `./install_opencv.sh` if needed)
+- OpenCV 4.11.0+ (install via package manager: `sudo apt-get install libopencv-dev`)
+- For C integration: CMake 3.16+, GCC/Clang
+- Optional: `bear` for language server support
 
 ---
 

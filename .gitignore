@@ -1,2 +1,4 @@
 target
 face_demo
+c_integration/.cache/clangd/index
+c_integration/build

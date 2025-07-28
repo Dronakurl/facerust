@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/konrad/ddt/regioncounter/facerust/c_integration/build",
+  "command": "/usr/bin/c++  -isystem /usr/local/include/opencv4 -O3 -DNDEBUG -std=gnu++11 -o CMakeFiles/face_demo.dir/example_c.cpp.o -c /home/konrad/ddt/regioncounter/facerust/c_integration/example_c.cpp",
+  "file": "/home/konrad/ddt/regioncounter/facerust/c_integration/example_c.cpp",
+  "output": "CMakeFiles/face_demo.dir/example_c.cpp.o"
+}
+]
