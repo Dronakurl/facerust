@@ -4,13 +4,18 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-opencv = { version = "0.92", default-features = false, features = ["dnn", "imgproc", "imgcodecs", "objdetect"] }
+opencv = { version = "0.95", default-features = false, features = [
+  "dnn",
+  "imgproc",
+  "imgcodecs",
+  "objdetect",
+] }
 anyhow = "1.0"
-thiserror = "1.0"
+thiserror = "2.0"
 tokio = { version = "1.0", features = ["full"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
-notify = "6.0"  # For file system watching
+notify = "8.1" # For file system watching
 clap = { version = "4.0", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
