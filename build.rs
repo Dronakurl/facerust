@@ -67,25 +67,7 @@ fn download_file(url: &str, filename: &str) -> Result<(), Box<dyn std::error::Er
         return Ok(());
     }
 
-    // Use wget if curl is not available
-    if which("wget") {
-        let output = std::process::Command::new("wget")
-            .arg("-q") // Quiet
-            .arg("-O")
-            .arg(filename)
-            .arg(url)
-            .output()?;
-
-        if !output.status.success() {
-            return Err(format!("wget failed: {}", String::from_utf8_lossy(&output.stderr)).into());
-        }
-        return Ok(());
-    }
-
-    Err(
-        "Neither curl nor wget found. Please install one of them or download the models manually."
-            .into(),
-    )
+    Err("curl found. Please install or download the models manually.".into())
 }
 
 fn which(command: &str) -> bool {
@@ -95,4 +77,3 @@ fn which(command: &str) -> bool {
         .map(|output| output.status.success())
         .unwrap_or(false)
 }
-
