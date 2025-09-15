@@ -1,7 +1,7 @@
 pub mod face_recognition;
+pub mod ffi;
 pub mod types;
 pub mod watcher;
-pub mod ffi;
 
 pub use face_recognition::FaceRecognition;
 pub use types::{DbLoadStatus, DetectedFace, MatchResult, MatchResults};

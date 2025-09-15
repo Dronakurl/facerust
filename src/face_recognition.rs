@@ -27,7 +27,7 @@ pub struct FaceRecognition {
     watcher_running: Arc<AtomicBool>,
 }
 
-const SCORE_THRESHOLD: f32 = 0.5;  // Lowered from 0.7 for better face detection
+const SCORE_THRESHOLD: f32 = 0.5; // Lowered from 0.7 for better face detection
 const NMS_THRESHOLD: f32 = 0.3;
 const TOP_K: i32 = 5000;
 

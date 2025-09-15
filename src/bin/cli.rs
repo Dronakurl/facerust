@@ -1,6 +1,9 @@
 use clap::{Arg, Command};
 use facerust::FaceRecognition;
-use opencv::{imgcodecs::{imread, imwrite, IMREAD_COLOR}, prelude::*};
+use opencv::{
+    imgcodecs::{imread, imwrite, IMREAD_COLOR},
+    prelude::*,
+};
 use std::path::Path;
 use tokio::time::{sleep, Duration};
 use tracing::{info, warn, Level};
@@ -69,7 +72,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 /// Simple face recognition run on one image
 async fn simple_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn std::error::Error>> {
     info!("Running simple face recognition...");
-    
+
     // Load image
     let mut frame = imread(image_path, IMREAD_COLOR)?;
     if frame.empty() {
@@ -84,7 +87,9 @@ async fn simple_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn std::
     )?;
 
     // Load database
-    face_recognition.load_persons_db(db_path, false, false).await?;
+    face_recognition
+        .load_persons_db(db_path, false, false)
+        .await?;
 
     // Run face recognition
     let results = face_recognition.run(&mut frame, 0.4, true).await?;
@@ -118,7 +123,9 @@ async fn test_mode_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn st
 
     // Load the initial database
     info!("2. Loading initial persons database from: {}", db_path);
-    face_recognition.load_persons_db(db_path, false, false).await?;
+    face_recognition
+        .load_persons_db(db_path, false, false)
+        .await?;
 
     // Start watching for database changes (check every 2 seconds for faster testing)
     info!("3. Starting database watcher (check interval: 2 seconds)...");
@@ -132,7 +139,9 @@ async fn test_mode_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn st
     }
 
     info!("5. Running face recognition on test image...");
-    let result = face_recognition.run_one_face(frame.clone(), 0.4, false).await?;
+    let result = face_recognition
+        .run_one_face(frame.clone(), 0.4, false)
+        .await?;
     info!("Found name: {}", result.to_string());
 
     // Wait a bit to let any initial processing complete
@@ -156,9 +165,13 @@ async fn test_mode_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn st
         opencv::core::CV_8UC3,
         opencv::core::Scalar::all(255.0),
     )?;
-    
-    imwrite(test_file_path.to_str().unwrap(), &white_image, &opencv::core::Vector::new())?;
-    
+
+    imwrite(
+        test_file_path.to_str().unwrap(),
+        &white_image,
+        &opencv::core::Vector::new(),
+    )?;
+
     if test_file_path.exists() {
         info!("   Created test file: {}", test_file_path.display());
     } else {
