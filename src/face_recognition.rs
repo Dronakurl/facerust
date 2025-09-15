@@ -191,7 +191,7 @@ impl FaceRecognition {
                                 .and_then(|e| e.to_str())
                                 .unwrap_or("jpg");
                             let visualize_path =
-                                person_path.join(format!("{}_visualize.{}", stem, extension));
+                                person_path.join(format!("{stem}_visualize.{extension}"));
 
                             let mut vis_img = img.clone();
                             let faces = self.extract_features(vis_img.clone()).await?;
@@ -486,7 +486,7 @@ impl FaceRecognition {
                 // Scale bounding box to match the visualization frame size
                 if let Ok(bbox) = face.bbox_scaled(frame.size()?) {
                     self.visualize_face(frame, bbox)?;
-                    self.annotate_with_name_scaled(frame, &face, &best.name)?;
+                    self.annotate_with_name_scaled(frame, face, &best.name)?;
                 }
             }
         }

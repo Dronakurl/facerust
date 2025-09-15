@@ -7,7 +7,6 @@ use opencv::{
 use std::path::Path;
 use tokio::time::{sleep, Duration};
 use tracing::{info, warn, Level};
-use tracing_subscriber;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -51,12 +50,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Check if files exist
     if !Path::new(image_path).exists() {
-        eprintln!("Error: Image file does not exist: {}", image_path);
+        eprintln!("Error: Image file does not exist: {image_path}");
         std::process::exit(1);
     }
 
     if !Path::new(db_path).exists() {
-        eprintln!("Error: Database directory does not exist: {}", db_path);
+        eprintln!("Error: Database directory does not exist: {db_path}");
         std::process::exit(1);
     }
 
@@ -76,7 +75,7 @@ async fn simple_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn std::
     // Load image
     let mut frame = imread(image_path, IMREAD_COLOR)?;
     if frame.empty() {
-        return Err(format!("Could not load image: {}", image_path).into());
+        return Err(format!("Could not load image: {image_path}").into());
     }
 
     // Initialize face recognition
@@ -135,7 +134,7 @@ async fn test_mode_run(image_path: &str, db_path: &str) -> Result<(), Box<dyn st
     info!("4. Loading test image: {}", image_path);
     let frame = imread(image_path, IMREAD_COLOR)?;
     if frame.empty() {
-        return Err(format!("Could not load image: {}", image_path).into());
+        return Err(format!("Could not load image: {image_path}").into());
     }
 
     info!("5. Running face recognition on test image...");
